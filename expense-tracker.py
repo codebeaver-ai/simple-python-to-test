@@ -5,6 +5,8 @@ class ExpenseTracker:
             ["food", "transport", "utilities", "entertainment", "other"]
         )
 
+    ## new and improved defs below
+
     def add_expense(self, amount, category, description):
         """Add a new expense to the tracker."""
         if not isinstance(amount, (int, float)) or amount <= 0:
