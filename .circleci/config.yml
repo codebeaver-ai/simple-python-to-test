@@ -1,0 +1,30 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@2.1
+
+jobs:
+  build-and-test:
+    docker:
+      - image: cimg/python:3.11
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+          packages:
+            - pytest
+            - pytest-cov
+      - run:
+          name: Run tests with coverage
+          command: |
+            pytest --cov=. --cov-report=xml
+      - store_artifacts:
+          path: coverage.xml
+          destination: coverage-report
+      - store_test_results:
+          path: test-results
+
+workflows:
+  main:
+    jobs:
+      - build-and-test
