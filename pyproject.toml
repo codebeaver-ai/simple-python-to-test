@@ -18,3 +18,5 @@ dependencies = [
 pythonpath = [
     "."
 ]
+[tool.hatch.build.targets.wheel]
+packages = ["expense_tracker"]
