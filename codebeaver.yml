@@ -1,0 +1,4 @@
+tests:
+  command: pytest
+  framework: pytest
+  coverage: coverage run -m pytest --show-capture=no || true
