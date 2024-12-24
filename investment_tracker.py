@@ -1,4 +1,4 @@
-class ExpenseTracker:
+class InvestmentTracker:
     def __init__(self):
         self.expenses = []
         self.categories = set(
