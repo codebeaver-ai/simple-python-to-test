@@ -4,6 +4,8 @@ from io import StringIO
 
 from expense_tracker import ExpenseTracker
 
+from investment_tracker import InvestmentTracker
+
 def test_main_prints_total_and_food_expenses(capsys):
     with patch('sys.stdout', new=StringIO()) as fake_output:
         # Call the main function
@@ -46,3 +48,58 @@ def test_add_expense_invalid():
     # Test adding an expense with invalid category  
     with pytest.raises(ValueError, match="Category must be one of:"):
         tracker.add_expense(50, "invalid category", "Invalid expense")
+
+def test_compute_category_sum():
+    tracker = InvestmentTracker()
+
+    # Add sample expenses
+    tracker.record_transaction(10.0, "food", "Groceries")
+    tracker.record_transaction(20.0, "transport", "Gas")
+    tracker.record_transaction(5.0, "food", "Snacks")
+
+    # Test with a valid category
+    assert tracker.compute_category_sum("food") == 15.0
+
+    # Test with an invalid category
+    with pytest.raises(ValueError, match="Category must be one of:"):
+        tracker.compute_category_sum("invalid")
+
+def test_register_new_category():
+    tracker = InvestmentTracker()
+
+    # Test registering a new valid category
+    assert tracker.register_new_category("shopping") == True
+    assert "shopping" in tracker.categories
+
+    # Test registering an existing category
+    assert tracker.register_new_category("shopping") == False
+    assert len(tracker.categories) == 6  # Original 5 categories + "shopping"
+
+    # Test registering an invalid category (empty string)
+    with pytest.raises(ValueError, match="Category must be a non-empty string"):
+        tracker.register_new_category("")
+
+    # Test registering an invalid category (non-string)
+    with pytest.raises(ValueError, match="Category must be a non-empty string"):
+        tracker.register_new_category(123)
+
+def test_filter_by_category():
+    tracker = InvestmentTracker()
+
+    # Add sample expenses
+    tracker.record_transaction(10.0, "food", "Groceries")
+    tracker.record_transaction(20.0, "transport", "Gas") 
+    tracker.record_transaction(5.0, "food", "Snacks")
+    tracker.record_transaction(15.0, "utilities", "Electric bill")
+
+    # Test filtering with a valid category
+    food_expenses = tracker.filter_by_category("food")
+    assert len(food_expenses) == 2
+    assert food_expenses[0]['amount'] == 10.0
+    assert food_expenses[0]['description'] == "Groceries"
+    assert food_expenses[1]['amount'] == 5.0
+    assert food_expenses[1]['description'] == "Snacks"
+
+    # Test filtering with an invalid category
+    with pytest.raises(ValueError, match="Category must be one of:"):
+        tracker.filter_by_category("invalid")
