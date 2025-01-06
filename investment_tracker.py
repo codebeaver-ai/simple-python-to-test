@@ -5,8 +5,6 @@ class InvestmentTracker:
             ["food", "transport", "utilities", "entertainment", "other"]
         )
 
-    ## new and improved defs below. this file was changed
-
     def record_transaction(self, amount, category, description):
         """Add a new expense to the tracker."""
         if not isinstance(amount, (int, float)) or amount <= 0:
