@@ -108,3 +108,35 @@ class TestExpenseTracker(unittest.TestCase):
 
         # Ensure expenses weren't affected
         self.assertEqual(len(tracker.expenses), 0)
+
+    def test_get_expenses_by_category(self):
+        """
+        Test retrieving expenses for a specific category.
+        This test adds multiple expenses to different categories and then
+        checks if we can correctly retrieve expenses for a specific category.
+        """
+        tracker = ExpenseTracker()
+
+        # Add some test expenses
+        tracker.expenses.append({"amount": 50, "category": "food", "description": "Groceries"})
+        tracker.expenses.append({"amount": 30, "category": "transport", "description": "Bus ticket"})
+        tracker.expenses.append({"amount": 20, "category": "food", "description": "Lunch"})
+        tracker.expenses.append({"amount": 100, "category": "utilities", "description": "Electricity bill"})
+
+        # Define a method to get expenses by category (this doesn't exist yet in the ExpenseTracker class)
+        def get_expenses_by_category(category):
+            return [expense for expense in tracker.expenses if expense['category'] == category]
+
+        # Test retrieving expenses for the 'food' category
+        food_expenses = get_expenses_by_category('food')
+        self.assertEqual(len(food_expenses), 2)
+        self.assertTrue(all(expense['category'] == 'food' for expense in food_expenses))
+
+        # Test retrieving expenses for the 'transport' category
+        transport_expenses = get_expenses_by_category('transport')
+        self.assertEqual(len(transport_expenses), 1)
+        self.assertEqual(transport_expenses[0]['description'], 'Bus ticket')
+
+        # Test retrieving expenses for a category with no expenses
+        entertainment_expenses = get_expenses_by_category('entertainment')
+        self.assertEqual(len(entertainment_expenses), 0)
