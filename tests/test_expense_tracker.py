@@ -108,3 +108,17 @@ class TestExpenseTracker(unittest.TestCase):
 
         # Ensure expenses weren't affected
         self.assertEqual(len(tracker.expenses), 0)
+
+    def test_iterate_over_categories(self):
+        tracker = ExpenseTracker()
+        expected_categories = {"food", "transport", "utilities", "entertainment", "other"}
+
+        # Convert both sets to sorted lists for comparison
+        iterated_categories = sorted(list(tracker.categories))
+        expected_categories_list = sorted(list(expected_categories))
+
+        # Check if we can iterate over the categories and get all expected values
+        self.assertEqual(iterated_categories, expected_categories_list)
+
+        # Check if the length of iterated categories matches the expected length
+        self.assertEqual(len(list(tracker.categories)), len(expected_categories))
