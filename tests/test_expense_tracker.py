@@ -108,3 +108,118 @@ class TestExpenseTracker(unittest.TestCase):
 
         # Ensure expenses weren't affected
         self.assertEqual(len(tracker.expenses), 0)
+
+    def test_add_expense(self):
+        """
+        Test the add_expense method of ExpenseTracker.
+
+        This test checks if:
+        1. A valid expense is added correctly.
+        2. An exception is raised for an invalid amount.
+        3. An exception is raised for an invalid category.
+        """
+        tracker = ExpenseTracker()
+
+        # Test adding a valid expense
+        self.assertTrue(tracker.add_expense(50.0, "food", "Groceries"))
+        self.assertEqual(len(tracker.expenses), 1)
+        self.assertEqual(tracker.expenses[0]["amount"], 50.0)
+        self.assertEqual(tracker.expenses[0]["category"], "food")
+        self.assertEqual(tracker.expenses[0]["description"], "Groceries")
+
+        # Test adding an expense with invalid amount
+        with self.assertRaises(ValueError):
+            tracker.add_expense(-10, "food", "Invalid amount")
+
+        # Test adding an expense with invalid category
+        with self.assertRaises(ValueError):
+            tracker.add_expense(30, "invalid_category", "Invalid category")
+
+    def test_get_total_expenses(self):
+        """
+        Test the get_total_expenses method of ExpenseTracker.
+
+        This test checks if:
+        1. The method correctly calculates the total of all added expenses.
+        2. The total is accurate after adding multiple expenses.
+        3. The method returns 0 when no expenses have been added.
+        """
+        tracker = ExpenseTracker()
+
+        # Test with no expenses
+        self.assertEqual(tracker.get_total_expenses(), 0)
+
+        # Add multiple expenses
+        tracker.add_expense(50.0, "food", "Groceries")
+        tracker.add_expense(30.0, "transport", "Gas")
+        tracker.add_expense(100.0, "utilities", "Electricity")
+
+        # Calculate expected total
+        expected_total = 50.0 + 30.0 + 100.0
+
+        # Test the total expenses
+        self.assertEqual(tracker.get_total_expenses(), expected_total)
+
+        # Add one more expense
+        tracker.add_expense(25.5, "entertainment", "Movie")
+        expected_total += 25.5
+
+        # Test the updated total expenses
+        self.assertEqual(tracker.get_total_expenses(), expected_total)
+
+    def test_get_expenses_by_category(self):
+        """
+        Test the get_expenses_by_category method of ExpenseTracker.
+
+        This test checks if:
+        1. The method correctly returns all expenses for a valid category.
+        2. The method raises a ValueError for an invalid category.
+        3. The returned expenses match the expected ones for the valid category.
+        """
+        tracker = ExpenseTracker()
+
+        # Add expenses to multiple categories
+        tracker.add_expense(50.0, "food", "Groceries")
+        tracker.add_expense(30.0, "food", "Restaurant")
+        tracker.add_expense(100.0, "utilities", "Electricity")
+        tracker.add_expense(25.5, "entertainment", "Movie")
+
+        # Test getting expenses for a valid category
+        food_expenses = tracker.get_expenses_by_category("food")
+        self.assertEqual(len(food_expenses), 2)
+        self.assertEqual(food_expenses[0]["amount"], 50.0)
+        self.assertEqual(food_expenses[0]["description"], "Groceries")
+        self.assertEqual(food_expenses[1]["amount"], 30.0)
+        self.assertEqual(food_expenses[1]["description"], "Restaurant")
+
+    def test_get_category_total(self):
+        """
+        Test the get_category_total method of ExpenseTracker.
+
+        This test checks if:
+        1. The method correctly calculates the total expenses for a valid category.
+        2. The method returns 0 for a category with no expenses.
+        3. The method raises a ValueError for an invalid category.
+        4. The method handles case-insensitive category names.
+        """
+        tracker = ExpenseTracker()
+
+        # Add expenses to multiple categories
+        tracker.add_expense(50.0, "food", "Groceries")
+        tracker.add_expense(30.0, "Food", "Restaurant")  # Note the capitalization
+        tracker.add_expense(100.0, "utilities", "Electricity")
+        tracker.add_expense(25.5, "entertainment", "Movie")
+
+        # Test getting total for a category with multiple expenses (case-insensitive)
+        self.assertAlmostEqual(tracker.get_category_total("food"), 80.0, places=2)
+        self.assertAlmostEqual(tracker.get_category_total("FOOD"), 80.0, places=2)
+
+        # Test getting total for a category with one expense
+        self.assertAlmostEqual(tracker.get_category_total("utilities"), 100.0, places=2)
+
+        # Test getting total for a category with no expenses
+        self.assertAlmostEqual(tracker.get_category_total("transport"), 0.0, places=2)
+
+        # Test getting total for an invalid category
+        with self.assertRaises(ValueError):
+            tracker.get_category_total("invalid_category")
