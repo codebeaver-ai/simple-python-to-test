@@ -108,3 +108,26 @@ class TestExpenseTracker(unittest.TestCase):
 
         # Ensure expenses weren't affected
         self.assertEqual(len(tracker.expenses), 0)
+
+    def test_add_non_string_category(self):
+        """
+        Test that adding a non-string category to the ExpenseTracker is allowed
+        but might not be the intended use. This test demonstrates that the
+        current implementation doesn't restrict category types.
+        """
+        tracker = ExpenseTracker()
+        initial_category_count = len(tracker.categories)
+
+        # Add a non-string category (integer)
+        tracker.categories.add(123)
+
+        # Add another non-string category (list)
+        tracker.categories.add(("invalid",))
+
+        # Check that the categories were added
+        self.assertEqual(len(tracker.categories), initial_category_count + 2)
+        self.assertIn(123, tracker.categories)
+        self.assertIn(("invalid",), tracker.categories)
+
+        # Ensure expenses weren't affected
+        self.assertEqual(len(tracker.expenses), 0)
