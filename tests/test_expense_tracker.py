@@ -108,3 +108,29 @@ class TestExpenseTracker(unittest.TestCase):
 
         # Ensure expenses weren't affected
         self.assertEqual(len(tracker.expenses), 0)
+
+    def test_add_valid_and_invalid_categories(self):
+        """
+        Test adding both valid (string) and potentially invalid (integer) categories to the ExpenseTracker.
+        This test verifies that string categories can be added, and checks the behavior with an integer category.
+        """
+        tracker = ExpenseTracker()
+        initial_category_count = len(tracker.categories)
+
+        # Add a valid string category
+        new_valid_category = "education"
+        tracker.categories.add(new_valid_category)
+
+        # Attempt to add an integer category (which is allowed by set but may not be desired)
+        integer_category = 123
+        tracker.categories.add(integer_category)
+
+        # Check if the number of categories has increased
+        self.assertEqual(len(tracker.categories), initial_category_count + 2)
+
+        # Check if the new categories were added
+        self.assertIn(new_valid_category, tracker.categories)
+        self.assertIn(integer_category, tracker.categories)
+
+        # Ensure expenses weren't affected
+        self.assertEqual(len(tracker.expenses), 0)
