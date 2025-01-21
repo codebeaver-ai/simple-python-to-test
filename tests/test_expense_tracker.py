@@ -108,3 +108,29 @@ class TestExpenseTracker(unittest.TestCase):
 
         # Ensure expenses weren't affected
         self.assertEqual(len(tracker.expenses), 0)
+
+    def test_add_expense(self):
+        """
+        Test the add_expense method of ExpenseTracker.
+
+        This test checks if:
+        1. A valid expense is added correctly.
+        2. An exception is raised for an invalid amount.
+        3. An exception is raised for an invalid category.
+        """
+        tracker = ExpenseTracker()
+
+        # Test adding a valid expense
+        self.assertTrue(tracker.add_expense(50.0, "food", "Groceries"))
+        self.assertEqual(len(tracker.expenses), 1)
+        self.assertEqual(tracker.expenses[0]["amount"], 50.0)
+        self.assertEqual(tracker.expenses[0]["category"], "food")
+        self.assertEqual(tracker.expenses[0]["description"], "Groceries")
+
+        # Test adding an expense with invalid amount
+        with self.assertRaises(ValueError):
+            tracker.add_expense(-10, "food", "Invalid amount")
+
+        # Test adding an expense with invalid category
+        with self.assertRaises(ValueError):
+            tracker.add_expense(30, "invalid_category", "Invalid category")
