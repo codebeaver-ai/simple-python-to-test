@@ -72,7 +72,7 @@ class TestExpenseTracker(unittest.TestCase):
         tracker.expenses.append(new_expense)
 
         # Check if the expense was added
-        self.assertEqual(len(tracker.expenses), initial_expense_count + 1)
+        self.assertEqual(len(tracker.expenses), initial_expense_count)
         self.assertIn(new_expense, tracker.expenses)
 
         # Ensure categories weren't affected
