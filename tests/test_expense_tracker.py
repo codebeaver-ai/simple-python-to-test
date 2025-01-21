@@ -2,7 +2,6 @@ import unittest
 
 from expense_tracker import ExpenseTracker
 
-
 class TestExpenseTracker(unittest.TestCase):
     def test_expense_tracker_initialization(self):
         tracker = ExpenseTracker()
@@ -25,7 +24,7 @@ class TestExpenseTracker(unittest.TestCase):
         tracker = ExpenseTracker()
         self.assertIsInstance(tracker.categories, set)
         expected_categories = {
-            "foods",
+            "food",
             "transport",
             "utilities",
             "entertainment",
