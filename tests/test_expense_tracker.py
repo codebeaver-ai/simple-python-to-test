@@ -2,7 +2,6 @@ import unittest
 
 from expense_tracker import ExpenseTracker
 
-
 class TestExpenseTracker(unittest.TestCase):
     def test_expense_tracker_initialization(self):
         tracker = ExpenseTracker()
@@ -25,7 +24,7 @@ class TestExpenseTracker(unittest.TestCase):
         tracker = ExpenseTracker()
         self.assertIsInstance(tracker.categories, set)
         expected_categories = {
-            "foods",
+            "food",
             "transport",
             "utilities",
             "entertainment",
@@ -60,24 +59,7 @@ class TestExpenseTracker(unittest.TestCase):
 
         self.assertEqual(len(tracker.categories), initial_category_count - 1)
         self.assertNotIn(category_to_remove, tracker.categories)
-        self.assertEqual(len(tracker.expenses), 0)  # Ensure expenses are still empty
-
-    def test_direct_expense_manipulation(self):
-        tracker = ExpenseTracker()
-        initial_expense_count = len(tracker.expenses)
-        initial_category_count = len(tracker.categories)
-
-        # Directly add an expense to the expenses list
-        new_expense = {"amount": 10, "category": "food", "description": "Groceries"}
-        tracker.expenses.append(new_expense)
-
-        # Check if the expense was added
-        self.assertEqual(len(tracker.expenses), initial_expense_count)
-        self.assertIn(new_expense, tracker.expenses)
-
-        # Ensure categories weren't affected
-        self.assertEqual(len(tracker.categories), initial_category_count)
-        self.assertNotIn("Groceries", tracker.categories)
+        self.assertEqual(len(tracker.expenses), 0)
 
     def test_add_multiple_categories(self):
         tracker = ExpenseTracker()
@@ -91,19 +73,16 @@ class TestExpenseTracker(unittest.TestCase):
         )
         for category in new_categories:
             self.assertIn(category, tracker.categories)
-        self.assertEqual(len(tracker.expenses), 0)  # Ensure expenses are still empty
+        self.assertEqual(len(tracker.expenses), 0)
 
     def test_clear_all_categories(self):
         tracker = ExpenseTracker()
         initial_expense_count = len(tracker.expenses)
 
-        # Clear all categories
         tracker.categories.clear()
 
-        # Check if categories are empty
         self.assertEqual(len(tracker.categories), 0)
 
-        # Ensure expenses weren't affected
         self.assertEqual(len(tracker.expenses), initial_expense_count)
 
     def test_modify_existing_category(self):
@@ -112,14 +91,25 @@ class TestExpenseTracker(unittest.TestCase):
         old_category = "entertainment"
         new_category = "entertainment_and_leisure"
 
-        # Remove the old category and add the new one
         tracker.categories.remove(old_category)
         tracker.categories.add(new_category)
 
-        # Check if the modification was successful
         self.assertEqual(len(tracker.categories), initial_category_count)
         self.assertNotIn(old_category, tracker.categories)
         self.assertIn(new_category, tracker.categories)
 
-        # Ensure expenses weren't affected
         self.assertEqual(len(tracker.expenses), 0)
+
+    def test_direct_expense_manipulation(self):
+        tracker = ExpenseTracker()
+        initial_expense_count = len(tracker.expenses)
+        initial_category_count = len(tracker.categories)
+
+        new_expense = {"amount": 10, "category": "food", "description": "Groceries"}
+        tracker.expenses.append(new_expense)
+
+        self.assertEqual(len(tracker.expenses), initial_expense_count + 1)
+        self.assertIn(new_expense, tracker.expenses)
+
+        self.assertEqual(len(tracker.categories), initial_category_count)
+        self.assertNotIn("Groceries", tracker.categories)
