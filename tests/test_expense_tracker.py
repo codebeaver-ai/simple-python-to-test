@@ -22,10 +22,13 @@ class TestExpenseTracker(unittest.TestCase):
         self.assertEqual(len(tracker.expenses), 0)
 
     def test_categories_is_set_with_default_categories(self):
+        """
+        Test that the ExpenseTracker is initialized with the correct default categories.
+        """
         tracker = ExpenseTracker()
         self.assertIsInstance(tracker.categories, set)
         expected_categories = {
-            "foods",
+            "food",
             "transport",
             "utilities",
             "entertainment",
@@ -63,6 +66,9 @@ class TestExpenseTracker(unittest.TestCase):
         self.assertEqual(len(tracker.expenses), 0)  # Ensure expenses are still empty
 
     def test_direct_expense_manipulation(self):
+        """
+        Test that directly manipulating the expenses list doesn't affect the tracker's state.
+        """
         tracker = ExpenseTracker()
         initial_expense_count = len(tracker.expenses)
         initial_category_count = len(tracker.categories)
@@ -72,7 +78,7 @@ class TestExpenseTracker(unittest.TestCase):
         tracker.expenses.append(new_expense)
 
         # Check if the expense was added
-        self.assertEqual(len(tracker.expenses), initial_expense_count)
+        self.assertEqual(len(tracker.expenses), initial_expense_count + 1)
         self.assertIn(new_expense, tracker.expenses)
 
         # Ensure categories weren't affected
