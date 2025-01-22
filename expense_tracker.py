@@ -1,9 +1,9 @@
 class ExpenseTracker:
     def __init__(self):
         self.expenses = []
-        self.categories = set(
-            ["food", "transport", "utilities", "entertainment", "other"]
-        )
+        # self.categories = set(
+        #     ["food", "transport", "utilities", "entertainment", "other"]
+        # )
 
 
 def main():
