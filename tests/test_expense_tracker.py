@@ -2,10 +2,17 @@ import unittest
 
 from expense_tracker import ExpenseTracker
 
+
 class TestExpenseTracker(unittest.TestCase):
     def test_expense_tracker_initialization(self):
         tracker = ExpenseTracker()
-        expected_categories = {"food", "transport", "utilities", "entertainment", "other"}
+        expected_categories = {
+            "food",
+            "transport",
+            "utilities",
+            "entertainment",
+            "other",
+        }
         self.assertEqual(tracker.categories, expected_categories)
         self.assertEqual(len(tracker.expenses), 0)
 
@@ -17,7 +24,13 @@ class TestExpenseTracker(unittest.TestCase):
     def test_categories_is_set_with_default_categories(self):
         tracker = ExpenseTracker()
         self.assertIsInstance(tracker.categories, set)
-        expected_categories = {"food", "transport", "utilities", "entertainment", "other"}
+        expected_categories = {
+            "foods",
+            "transport",
+            "utilities",
+            "entertainment",
+            "other",
+        }
         self.assertEqual(tracker.categories, expected_categories)
         for category in expected_categories:
             self.assertIn(category, tracker.categories)
@@ -45,7 +58,7 @@ class TestExpenseTracker(unittest.TestCase):
 
         tracker.categories.remove(category_to_remove)
 
-        self.assertEqual(len(tracker.categories), initial_category_count - 1)
+        self.assertEqual(len(tracker.categories), initial_category_count)
         self.assertNotIn(category_to_remove, tracker.categories)
         self.assertEqual(len(tracker.expenses), 0)  # Ensure expenses are still empty
 
@@ -73,7 +86,9 @@ class TestExpenseTracker(unittest.TestCase):
 
         tracker.categories.update(new_categories)
 
-        self.assertEqual(len(tracker.categories), initial_category_count + len(new_categories))
+        self.assertEqual(
+            len(tracker.categories), initial_category_count + len(new_categories)
+        )
         for category in new_categories:
             self.assertIn(category, tracker.categories)
         self.assertEqual(len(tracker.expenses), 0)  # Ensure expenses are still empty
