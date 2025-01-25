@@ -47,22 +47,19 @@ class TestExpenseTracker(unittest.TestCase):
 
         self.assertEqual(len(tracker.categories), initial_category_count - 1)
         self.assertNotIn(category_to_remove, tracker.categories)
-        self.assertEqual(len(tracker.expenses), 0)  # Ensure expenses are still empty
+        self.assertEqual(len(tracker.expenses), 0)
 
     def test_direct_expense_manipulation(self):
         tracker = ExpenseTracker()
         initial_expense_count = len(tracker.expenses)
         initial_category_count = len(tracker.categories)
 
-        # Directly add an expense to the expenses list
         new_expense = {"amount": 50, "category": "food", "description": "Groceries"}
         tracker.expenses.append(new_expense)
 
-        # Check if the expense was added
         self.assertEqual(len(tracker.expenses), initial_expense_count + 1)
         self.assertIn(new_expense, tracker.expenses)
 
-        # Ensure categories weren't affected
         self.assertEqual(len(tracker.categories), initial_category_count)
         self.assertNotIn("Groceries", tracker.categories)
 
@@ -76,19 +73,15 @@ class TestExpenseTracker(unittest.TestCase):
         self.assertEqual(len(tracker.categories), initial_category_count + len(new_categories))
         for category in new_categories:
             self.assertIn(category, tracker.categories)
-        self.assertEqual(len(tracker.expenses), 0)  # Ensure expenses are still empty
+        self.assertEqual(len(tracker.expenses), 0)
 
     def test_clear_all_categories(self):
         tracker = ExpenseTracker()
         initial_expense_count = len(tracker.expenses)
 
-        # Clear all categories
         tracker.categories.clear()
 
-        # Check if categories are empty
         self.assertEqual(len(tracker.categories), 0)
-
-        # Ensure expenses weren't affected
         self.assertEqual(len(tracker.expenses), initial_expense_count)
 
     def test_modify_existing_category(self):
@@ -97,14 +90,95 @@ class TestExpenseTracker(unittest.TestCase):
         old_category = "entertainment"
         new_category = "entertainment_and_leisure"
 
-        # Remove the old category and add the new one
         tracker.categories.remove(old_category)
         tracker.categories.add(new_category)
 
-        # Check if the modification was successful
         self.assertEqual(len(tracker.categories), initial_category_count)
         self.assertNotIn(old_category, tracker.categories)
         self.assertIn(new_category, tracker.categories)
-
-        # Ensure expenses weren't affected
         self.assertEqual(len(tracker.expenses), 0)
+
+    def test_add_expense(self):
+        tracker = ExpenseTracker()
+
+        self.assertTrue(tracker.add_expense(50.0, "food", "Groceries"))
+        self.assertEqual(len(tracker.expenses), 1)
+        self.assertEqual(tracker.get_total_expenses(), 50.0)
+
+        self.assertTrue(tracker.add_expense(30.0, "transport", "Bus ticket"))
+        self.assertEqual(len(tracker.expenses), 2)
+        self.assertEqual(tracker.get_total_expenses(), 80.0)
+
+        self.assertEqual(tracker.expenses[0], {"amount": 50.0, "category": "food", "description": "Groceries"})
+        self.assertEqual(tracker.expenses[1], {"amount": 30.0, "category": "transport", "description": "Bus ticket"})
+
+    def test_add_category(self):
+        tracker = ExpenseTracker()
+        initial_category_count = len(tracker.categories)
+
+        self.assertTrue(tracker.add_category("healthcare"))
+        self.assertEqual(len(tracker.categories), initial_category_count + 1)
+        self.assertIn("healthcare", tracker.categories)
+
+        self.assertFalse(tracker.add_category("healthcare"))
+        self.assertEqual(len(tracker.categories), initial_category_count + 1)
+
+        with self.assertRaises(ValueError):
+            tracker.add_category("")
+
+        with self.assertRaises(ValueError):
+            tracker.add_category(123)
+
+        self.assertEqual(len(tracker.categories), initial_category_count + 1)
+
+    def test_get_expenses_by_category(self):
+        tracker = ExpenseTracker()
+
+        tracker.add_expense(50.0, "food", "Groceries")
+        tracker.add_expense(30.0, "transport", "Bus ticket")
+        tracker.add_expense(25.0, "food", "Restaurant")
+
+        food_expenses = tracker.get_expenses_by_category("food")
+        self.assertEqual(len(food_expenses), 2)
+        self.assertEqual(food_expenses[0]["amount"], 50.0)
+        self.assertEqual(food_expenses[1]["amount"], 25.0)
+
+        entertainment_expenses = tracker.get_expenses_by_category("entertainment")
+        self.assertEqual(len(entertainment_expenses), 0)
+
+        with self.assertRaises(ValueError):
+            tracker.get_expenses_by_category("invalid_category")
+
+    def test_get_category_total(self):
+        tracker = ExpenseTracker()
+
+        tracker.add_expense(50.0, "food", "Groceries")
+        tracker.add_expense(30.0, "transport", "Bus ticket")
+        tracker.add_expense(25.0, "food", "Restaurant")
+        tracker.add_expense(100.0, "utilities", "Electricity bill")
+
+        self.assertEqual(tracker.get_category_total("food"), 75.0)
+        self.assertEqual(tracker.get_category_total("transport"), 30.0)
+        self.assertEqual(tracker.get_category_total("entertainment"), 0.0)
+
+        with self.assertRaises(ValueError):
+            tracker.get_category_total("invalid_category")
+
+    def test_add_expense_with_invalid_amount(self):
+        tracker = ExpenseTracker()
+
+        with self.assertRaises(ValueError):
+            tracker.add_expense(0, "food", "Invalid expense")
+
+        with self.assertRaises(ValueError):
+            tracker.add_expense(-50, "transport", "Invalid expense")
+
+        self.assertEqual(len(tracker.expenses), 0)
+        self.assertEqual(tracker.get_total_expenses(), 0)
+
+    def test_add_expense_case_insensitive_category(self):
+        tracker = ExpenseTracker()
+
+        self.assertTrue(tracker.add_expense(75.0, "FOOD", "Dinner"))
+
+        self.assertEqual(len(tracker.expenses), 1)
