@@ -64,7 +64,7 @@ class InvestmentTracker:
 
 def main():
     # Example usage
-    tracker = ExpenseTracker()
+    tracker = InvestmentTracker()
 
     # Add some sample expenses
     tracker.record_transaction(25.50, "food", "Lunch at cafe")
