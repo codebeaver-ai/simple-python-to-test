@@ -1,0 +1,7 @@
+from: pytest
+main_service: python
+services:
+  python:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
