@@ -9,5 +9,3 @@ hatch run test
 ```
 
 # Add comments here to trigger CodeBeaver
-
-Comment1
