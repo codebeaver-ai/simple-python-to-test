@@ -7,3 +7,7 @@ A simple python repo to test CodeBeaver + CircleCI
 ```bash
 hatch run test
 ```
+
+# Add comments here to trigger CodeBeaver
+
+Comment1
