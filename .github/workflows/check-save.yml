@@ -49,7 +49,8 @@ jobs:
               { 
                 "command": "getData", 
                 "args": { 
-                  "range": "staging-release-${{ steps.get_date.outputs.date }}!A:A" 
+                  "range": "staging-release-${{ steps.get_date.outputs.date }}!A:A",
+                  "worksheetTitle": "staging-release-${{ steps.get_date.outputs.date }}"
                 } 
               }
             ]
@@ -66,7 +67,11 @@ jobs:
               { 
                 "command": "getData", 
                 "args": {
-                  "range": "staging-release-${{ steps.get_date.outputs.date }}!B1" 
+                  "minCol": 2,
+                  "minRow": 1,
+                  "maxCol": 2,
+                  "maxRow": 1,
+                  "worksheetTitle": "staging-release-${{ steps.get_date.outputs.date }}"
                 } 
               }
             ]
@@ -76,6 +81,8 @@ jobs:
       - name: Adjust line count for headers
         id: adjust_line_count
         run: |
+          echo "grab_lines: ${{ toJSON(steps.grab_lines.outputs.result) }}"
+          echo "get_counter: ${{ toJSON(steps.get_counter.outputs.result) }}"
           # Parse the JSON result and safely get the length
           LINE_COUNT=$(echo '${{ toJSON(steps.grab_lines.outputs.result) }}' | jq '.values | length')
           # Subtract header rows (adjust number if needed)
