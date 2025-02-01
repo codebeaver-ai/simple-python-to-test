@@ -39,8 +39,8 @@ jobs:
         env:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
           GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
-      - name: Count lines in spreadsheet
-        id: count_lines
+      - name: Grab lines in spreadsheet
+        id: grab_lines
         uses: jroehl/gsheet.action@v2.0.0
         with:
           spreadsheetId: 11QvkZsqomQ65ns0XBse0xCl8fjUAWbwduYt6xIq4YC8
@@ -58,7 +58,7 @@ jobs:
           spreadsheetId: 11QvkZsqomQ65ns0XBse0xCl8fjUAWbwduYt6xIq4YC8
           commands: |
             [
-              { "command": "getData", "args": { "range": "staging-release-${{ steps.get_date.outputs.date }}!A2" } }
+              { "command": "getData", "args": { "range": "staging-release-${{ steps.get_date.outputs.date }}!B1" } }
             ]
         env:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
@@ -66,9 +66,9 @@ jobs:
       - name: Adjust line count for headers
         id: adjust_line_count
         run: |
-          echo "line_count=$(($(echo ${{ steps.get_counter.outputs.result }} | jq '.values | length') - 3))"
+          echo "line_count=$(($(echo ${{ steps.grab_lines.outputs.result }} | jq '.values | length') - 3))"
           echo ${{ steps.get_counter.outputs.result }}
-          echo "line_count=$(($(echo ${{ steps.get_counter.outputs.result }} | jq '.values | length') - 3))" >> $GITHUB_ENV
+          echo "line_count=$(($(echo ${{ steps.grab_lines.outputs.result }} | jq '.values | length') - 3))" >> $GITHUB_ENV
       - name: Debug line count
         run: |
           echo "Line count: ${{ env.line_count }}"
