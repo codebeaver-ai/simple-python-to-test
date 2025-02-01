@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "expense-tracker"
+version = "0.1.0"
+authors = [
+    { name = "Your Name" },
+]
+description = "A simple expense tracking application"
+requires-python = ">=3.7"
+dependencies = [
+    "pytest",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [
+    "."
+]
+[tool.hatch.build.targets.wheel]
+packages = ["expense_tracker"]

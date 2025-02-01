@@ -1,4 +1,8 @@
-class TestInvestment:
+import pytest
+from datetime import datetime
+from investment_tracker import InvestmentTracker
+
+
+class TestInvestmentTracker:
     def test_record_transaction(self):
-        print("test_record_transaction")
-        assert True
+        assert InvestmentTracker().record_transaction(100, "food", "groceries") == True
