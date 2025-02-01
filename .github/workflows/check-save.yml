@@ -38,3 +38,37 @@ jobs:
         env:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
           GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
+      - name: Count lines in spreadsheet
+        id: count_lines
+        uses: jroehl/gsheet.action@v2.0.0
+        with:
+          spreadsheetId: 11QvkZsqomQ65ns0XBse0xCl8fjUAWbwduYt6xIq4YC8
+          commands: |
+            [
+              { "command": "getData", "args": { "range": "staging-release-${{ steps.get_date.outputs.date }}!A:A" } }
+            ]
+        env:
+          GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
+          GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
+      - name: Get counter (A2 cell) and add 3 to offset the header rows
+        id: get_counter
+        uses: jroehl/gsheet.action@v2.0.0
+        with:
+          spreadsheetId: 11QvkZsqomQ65ns0XBse0xCl8fjUAWbwduYt6xIq4YC8
+          commands: |
+            [
+              { "command": "getData", "args": { "range": "staging-release-${{ steps.get_date.outputs.date }}!A2" } }
+            ]
+        env:
+          GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
+          GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
+        # Save the result to an output variable and adjust for headers
+        run: echo "line_count=$(($(echo ${{ steps.get_counter.outputs.result }} | jq '.values | length') - 3))" >> $GITHUB_ENV
+      - name: Trigger another workflow
+        if: ${{ env.line_count >= steps.get_counter.outputs.result }} # if the lines (minus 3 for the header rows) are equal to the content of A2, trigger another workflow
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/codebeaver-ai/codebeaver-ai/dispatches \
+            -d '{"event_type": "report-all-test-prs"}'
