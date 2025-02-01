@@ -51,7 +51,7 @@ jobs:
         env:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
           GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
-      - name: Get counter (A2 cell)
+      - name: Get counter (B1 cell)
         id: get_counter
         uses: jroehl/gsheet.action@v2.0.0
         with:
@@ -67,13 +67,13 @@ jobs:
         id: adjust_line_count
         run: |
           # Parse the JSON result and safely get the length
-          LINE_COUNT=$(echo ${{ steps.grab_lines.outputs.result }} | jq '.values | length')
+          LINE_COUNT=$(echo '${{ toJSON(steps.grab_lines.outputs.result) }}' | jq '.values | length')
           # Subtract header rows (adjust number if needed)
           ADJUSTED_COUNT=$((LINE_COUNT - 3))
           echo "line_count=${ADJUSTED_COUNT}" >> $GITHUB_ENV
 
           # Safely parse the counter value
-          COUNTER=$(echo ${{ steps.get_counter.outputs.result }} | jq '.values[0][0]' -r)
+          COUNTER=$(echo '${{ toJSON(steps.get_counter.outputs.result) }}' | jq '.values[0][0]' -r)
           echo "counter=${COUNTER}" >> $GITHUB_ENV
 
       - name: Debug line count
