@@ -1,9 +1,11 @@
 import pytest
-from datetime import datetime
-from investment_track import record_transaction
-
+from investment_tracker import InvestmentTracker
 
 class TestInvestmentTracker:
     def test_record_transaction(self):
-        record_transaction(100, "buy", "stock", "2024-01-01")
-        assert True
+        """
+        Test that a transaction can be recorded successfully.
+        """
+        tracker = InvestmentTracker()
+        result = tracker.record_transaction(100, "food", "Grocery shopping")
+        assert result == True
