@@ -2,7 +2,7 @@ class InvestmentTracker:
     def __init__(self):
         self.expenses = []
         self.categories = set(
-            ["food", "transport", "utilities", "entertainment", "other"]
+            ["food", "transport", "utilities", "entertainment", "health", "other"]
         )
 
     ## new and improved defs below
