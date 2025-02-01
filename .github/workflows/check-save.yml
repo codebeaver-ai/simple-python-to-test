@@ -65,9 +65,16 @@ jobs:
           GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
       - name: Adjust line count for headers
         id: adjust_line_count
-        run: echo "line_count=$(($(echo ${{ steps.get_counter.outputs.result }} | jq '.values | length') - 3))" >> $GITHUB_ENV
+        run: |
+          echo "line_count=$(($(echo ${{ steps.get_counter.outputs.result }} | jq '.values | length') - 3))"
+          echo ${{ steps.get_counter.outputs.result }}
+          echo "line_count=$(($(echo ${{ steps.get_counter.outputs.result }} | jq '.values | length') - 3))" >> $GITHUB_ENV
+      - name: Debug line count
+        run: |
+          echo "Line count: ${{ env.line_count }}"
+          echo "Counter result: ${{ steps.get_counter.outputs.result }}"
       - name: Trigger another workflow
-        if: ${{ env.line_count >= steps.get_counter.outputs.result }} # if the lines (minus 3 for the header rows) are equal to the content of A2, trigger another workflow
+        if: ${{ env.line_count >= steps.get_counter.outputs.result }}
         run: |
           curl -X POST \
             -H "Accept: application/vnd.github.everest-preview+json" \
