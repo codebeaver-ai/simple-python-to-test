@@ -1,3 +1,4 @@
+import pytest
 import unittest
 
 from expense_tracker import ExpenseTracker
@@ -108,3 +109,29 @@ class TestExpenseTracker(unittest.TestCase):
 
         # Ensure expenses weren't affected
         self.assertEqual(len(tracker.expenses), 0)
+
+def test_add_expense_invalid_inputs():
+    """
+    Test that the add_expense method raises a ValueError for invalid inputs:
+    - Negative amounts,
+    - Zero amounts,
+    - Non-numeric amounts,
+    - and an invalid category.
+    """
+    tracker = ExpenseTracker()
+
+    # Test with negative amount
+    with pytest.raises(ValueError, match="Amount must be a positive number"):
+        tracker.add_expense(-5, "food", "Invalid negative expense")
+
+    # Test with zero amount
+    with pytest.raises(ValueError, match="Amount must be a positive number"):
+        tracker.add_expense(0, "transport", "Invalid zero expense")
+
+    # Test with non-numeric amount
+    with pytest.raises(ValueError, match="Amount must be a positive number"):
+        tracker.add_expense("twenty", "utilities", "Invalid type for amount")
+
+    # Test with invalid category
+    with pytest.raises(ValueError, match="Category must be one of"):
+        tracker.add_expense(10, "invalid_cat", "Invalid category")
