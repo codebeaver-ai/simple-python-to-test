@@ -64,6 +64,7 @@ jobs:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
           GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
       - name: Adjust line count for headers
+        id: adjust_line_count
         run: echo "line_count=$(($(echo ${{ steps.get_counter.outputs.result }} | jq '.values | length') - 3))" >> $GITHUB_ENV
       - name: Trigger another workflow
         if: ${{ env.line_count >= steps.get_counter.outputs.result }} # if the lines (minus 3 for the header rows) are equal to the content of A2, trigger another workflow
