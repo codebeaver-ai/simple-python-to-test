@@ -46,7 +46,13 @@ jobs:
           spreadsheetId: 11QvkZsqomQ65ns0XBse0xCl8fjUAWbwduYt6xIq4YC8
           commands: |
             [
-              { "command": "getData", "args": { "range": "staging-release-${{ steps.get_date.outputs.date }}!A:A" } }
+              { 
+                "command": "getData", 
+                "args": { 
+                  "worksheetTitle": "staging-release-${{ steps.get_date.outputs.date }}",
+                  "range": "A:A" 
+                } 
+              }
             ]
         env:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
@@ -58,7 +64,13 @@ jobs:
           spreadsheetId: 11QvkZsqomQ65ns0XBse0xCl8fjUAWbwduYt6xIq4YC8
           commands: |
             [
-              { "command": "getData", "args": { "range": "staging-release-${{ steps.get_date.outputs.date }}!B1" } }
+              { 
+                "command": "getData", 
+                "args": { 
+                  "worksheetTitle": "staging-release-${{ steps.get_date.outputs.date }}",
+                  "range": "B1" 
+                } 
+              }
             ]
         env:
           GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
