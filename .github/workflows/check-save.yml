@@ -49,7 +49,7 @@ jobs:
               { 
                 "command": "getData", 
                 "args": { 
-                  "range": "staging-release-${{ steps.get_date.outputs.date }}"!A:A" 
+                  "range": "staging-release-${{ steps.get_date.outputs.date }}!A:A" 
                 } 
               }
             ]
