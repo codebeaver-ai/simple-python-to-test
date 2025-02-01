@@ -49,8 +49,7 @@ jobs:
               { 
                 "command": "getData", 
                 "args": { 
-                  "worksheetTitle": "staging-release-${{ steps.get_date.outputs.date }}",
-                  "range": "A:A" 
+                  "range": "staging-release-${{ steps.get_date.outputs.date }}"!A:A" 
                 } 
               }
             ]
@@ -66,9 +65,8 @@ jobs:
             [
               { 
                 "command": "getData", 
-                "args": { 
-                  "worksheetTitle": "staging-release-${{ steps.get_date.outputs.date }}",
-                  "range": "B1" 
+                "args": {
+                  "range": "staging-release-${{ steps.get_date.outputs.date }}!B1" 
                 } 
               }
             ]
