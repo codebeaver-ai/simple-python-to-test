@@ -1,4 +1,5 @@
 name: Save Check Results
+description: Save the results of a check run to a spreadsheet and then checks if we tested all of the PRs. If  so, it triggers another workflow to report the results.
 
 on:
   check_run:
@@ -72,3 +73,5 @@ jobs:
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             https://api.github.com/repos/codebeaver-ai/codebeaver-ai/dispatches \
             -d '{"event_type": "report-all-test-prs"}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
